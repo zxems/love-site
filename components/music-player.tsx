@@ -5,31 +5,48 @@ import { Music, Pause, Play, SkipBack, SkipForward, List } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 
+// Function to get the correct asset URL based on environment
+const getAssetUrl = (path: string) => {
+  // Remove leading slash if present
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  
+  // In browser environment
+  if (typeof window !== 'undefined') {
+    // Get the base URL from the document's base tag or use current origin
+    const baseElement = document.querySelector('base');
+    const baseUrl = baseElement ? baseElement.href : window.location.origin;
+    return new URL(cleanPath, baseUrl).toString();
+  }
+  
+  // In server environment, return relative path
+  return `./${cleanPath}`;
+};
+
 // Sample playlist - replace with your own songs
 const defaultPlaylist = [
   {
     id: 1,
     title: "Pistol",
     artist: "Cigarettes After Sex",
-    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/Pistol - Cigarettes After Sex.mp3` : "/Pistol - Cigarettes After Sex.mp3", // Replace with your actual song path
+    src: "Pistol - Cigarettes After Sex.mp3", // Will be processed by getAssetUrl
   },
   {
     id: 2,
     title: "Sweet",
     artist: "Cigarettes After Sex",
-    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/Sweet - Cigarettes After Sex.mp3` : "/Sweet - Cigarettes After Sex.mp3", // Replace with your actual song path
+    src: "Sweet - Cigarettes After Sex.mp3",
   },
   {
     id: 3,
     title: "Heavy",
     artist: "The Marias",
-    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/The Marias - Heavy (Official Audio).mp3` : "/The Marias - Heavy (Official Audio).mp3", // Replace with your actual song path
+    src: "The Marias - Heavy (Official Audio).mp3",
   },
   {
     id: 4,
     title: "No One Noticed",
     artist: "The Marias",
-    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/The Marias - No One Noticed (Visualizer).mp3` : "/The Marias - No One Noticed (Visualizer).mp3", // Replace with your actual song path
+    src: "The Marias - No One Noticed (Visualizer).mp3",
   },
 ]
 
@@ -49,9 +66,13 @@ export function MusicPlayer({ playlist = defaultPlaylist }: MusicPlayerProps) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [currentSongIndex, setCurrentSongIndex] = useState(0)
+  const [audioError, setAudioError] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const currentSong = playlist[currentSongIndex]
+  const currentSong = {
+    ...playlist[currentSongIndex],
+    src: getAssetUrl(playlist[currentSongIndex].src)
+  };
 
   useEffect(() => {
     const audio = audioRef.current
@@ -68,15 +89,22 @@ export function MusicPlayer({ playlist = defaultPlaylist }: MusicPlayerProps) {
     const handleEnded = () => {
       playNextSong()
     }
+    
+    const handleError = (e: ErrorEvent) => {
+      console.error("Audio error:", e);
+      setAudioError(`Error loading audio: ${e.message || 'Unknown error'}`);
+    }
 
     audio.addEventListener("timeupdate", handleTimeUpdate)
     audio.addEventListener("durationchange", handleDurationChange)
     audio.addEventListener("ended", handleEnded)
+    audio.addEventListener("error", handleError as EventListener)
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate)
       audio.removeEventListener("durationchange", handleDurationChange)
       audio.removeEventListener("ended", handleEnded)
+      audio.removeEventListener("error", handleError as EventListener)
     }
   }, [currentSongIndex])
 
@@ -129,6 +157,14 @@ export function MusicPlayer({ playlist = defaultPlaylist }: MusicPlayerProps) {
 
   return (
     <div className="w-full bg-white border-b border-[#FFD1DF]/50 py-2 px-4">
+      {/* Debug info - only visible when errors occur */}
+      {audioError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 mb-2 rounded">
+          <p className="text-sm">{audioError}</p>
+          <p className="text-xs mt-1">Current URL: {currentSong.src}</p>
+        </div>
+      )}
+      
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="flex items-center">
