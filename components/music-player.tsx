@@ -11,25 +11,25 @@ const defaultPlaylist = [
     id: 1,
     title: "Pistol",
     artist: "Cigarettes After Sex",
-    src: "/Pistol - Cigarettes After Sex.mp3", // Replace with your actual song path
+    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/Pistol - Cigarettes After Sex.mp3` : "/Pistol - Cigarettes After Sex.mp3", // Replace with your actual song path
   },
   {
     id: 2,
     title: "Sweet",
     artist: "Cigarettes After Sex",
-    src: "/Sweet - Cigarettes After Sex.mp3", // Replace with your actual song path
+    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/Sweet - Cigarettes After Sex.mp3` : "/Sweet - Cigarettes After Sex.mp3", // Replace with your actual song path
   },
   {
     id: 3,
     title: "Heavy",
     artist: "The Marias",
-    src: "/The Marias - Heavy (Official Audio).mp3", // Replace with your actual song path
+    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/The Marias - Heavy (Official Audio).mp3` : "/The Marias - Heavy (Official Audio).mp3", // Replace with your actual song path
   },
   {
     id: 4,
     title: "No One Noticed",
     artist: "The Marias",
-    src: "/The Marias - No One Noticed (Visualizer).mp3", // Replace with your actual song path
+    src: process.env.NODE_ENV === 'production' ? `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/The Marias - No One Noticed (Visualizer).mp3` : "/The Marias - No One Noticed (Visualizer).mp3", // Replace with your actual song path
   },
 ]
 
