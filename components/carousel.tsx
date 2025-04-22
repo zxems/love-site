@@ -11,21 +11,21 @@ import { cn } from "@/lib/utils"
 const defaultImages = [
   {
     id: 1,
-    src: "/placeholder.svg?height=600&width=800",
-    alt: "Memory 1",
-    caption: "Our first date",
+    src: "/the day we went to olive garden.jpeg?height=600&width=800",
+    alt: "the day we went to olive garden",
+    caption: "olive garden date",
   },
   {
     id: 2,
-    src: "/placeholder.svg?height=600&width=800",
-    alt: "Memory 2",
-    caption: "Summer vacation",
+    src: "/valentine's day.jpeg?height=600&width=800",
+    alt: "Valentine's Day",
+    caption: "VALENTINE'S DAY!!!",
   },
   {
     id: 3,
-    src: "/placeholder.svg?height=600&width=800",
-    alt: "Memory 3",
-    caption: "Anniversary celebration",
+    src: "/hehehe.jpeg?height=600&width=800",
+    alt: "hehehe",
+    caption: "kiss 💋",
   },
 ]
 
