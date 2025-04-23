@@ -11,7 +11,6 @@ export default function Home() {
           <header className="mb-12 text-center">
             <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">Austin + Hannah</h1>
             <p className="mt-4 text-xl text-gray-600">🩷🩷🩷</p>
-            <p className="mt-4 text-xl text-gray-600">I love you cutie</p>
           </header>
 
           <section className="mb-16">
